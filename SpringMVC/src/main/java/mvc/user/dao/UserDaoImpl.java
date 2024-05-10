@@ -86,7 +86,10 @@ public class UserDaoImpl implements UserDao {
 		// 查詢興趣並注入
 		String interest_sql = "select user_id, interest_id from user_interest where user_id = ?";
 		List<Map<String, Object>> interestList = jdbcTemplate.queryForList(interest_sql, userId);
-		System.out.println(interestList);
+		Integer[] interestIds = interestList.stream()
+					.map(data->(Integer)data.get("interest_id"))
+					.toArray(Integer[]::new);
+		user.setInterestIds(interestIds);
 		return user;
 	}
 
