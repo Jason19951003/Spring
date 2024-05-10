@@ -53,4 +53,10 @@ public class BaseDataDaoImpl implements BaseDataDao {
 		return jdbcTemplate.update(sql, userId, interestId);
 	}
 
+	@Override
+	public int deleteInterest(Integer interestId) {
+		String sql = "delete from user_interest where user_id = ?";
+		return jdbcTemplate.update(sql, interestId);
+	}
+
 }
