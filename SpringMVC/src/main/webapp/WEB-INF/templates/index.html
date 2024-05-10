@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>首頁</h1>
+	<a th:href="@{/target}">訪問至target.html</a><br>
+	<a th:href="@{/test}">訪問至success.html(GET)</a><br>
+	<a th:href="@{/testGetMapping}">訪問至success.html(GET)</a><br>
+	<form th:action="@{/test}" method="post">
+		<input type="submit" value="success">
+	</form>
+	<form th:action="@{/testGetMapping}" method="post">
+		<input type="submit" value="testGetMapping">
+	</form>
+	<a th:href="@{/testParam(userName='Jason')}">測試Param註解</a><br>
+	<form th:action="@{/testParam}" method="post">
+		<input type="text" id="userName" name="userName">
+		<input type="submit" value="testParam">
+	</form>
+</body>
+</html>

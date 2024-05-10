@@ -1,0 +1,50 @@
+<%@ page import="java.util.Date"%>
+<%@ page import="java.util.List"%>
+<%@ page import="java.text.SimpleDateFormat"%>
+<%@ page import="guestbook.model.GuestBook"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<%!
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	String dateFormat(Date date) {
+		return date == null ? "" : sdf.format(date);
+	}
+%>
+<%
+	List<GuestBook> guestBooks = (List) request.getAttribute("guestBooks");
+%>
+<div class="pure-form">
+	<fieldset>
+		<legend>GuestBook List</legend>
+		<table class="pure-table pure-table-bordered">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Username</th>
+					<th>Content</th>
+					<th>Create Date</th>
+					<th>Update Date</th>
+					<th>Update</th>
+					<th>Delete</th>
+				</tr>
+			</thead>
+			<tbody>
+				<%
+				for (GuestBook gb : guestBooks) {
+				%>
+				<tr>
+					<td><%=gb.getId()%></td>
+					<td><%=gb.getUserName()%></td>
+					<td><%=gb.getContent()%></td>
+					<td><%=dateFormat(gb.getCreateDate())%></td>
+					<td><%=dateFormat(gb.getUpdateDate())%></td>
+					<td><a class="button-success pure-button" href="/JavaWeb/guestbook/update?updateId=<%=gb.getId()%>">Update</a></td>
+					<td><a class="button-error pure-button"	href="/JavaWeb/guestbook?deleteId=<%=gb.getId()%>">Delete</a></td>
+				</tr>
+				<%
+				}
+				%>
+			</tbody>
+		</table>
+	</fieldset>
+</div>
