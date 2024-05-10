@@ -5,15 +5,18 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import mvc.user.model.po.Education;
 import mvc.user.model.po.Gender;
 import mvc.user.model.po.Interest;
 
+@Repository
 public class BaseDataDaoImpl implements BaseDataDao {
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
 	private final String queryAllSQL = "select item_id as id, item_name as name from base_data where group_name = ?";
 	private final String getOneSQL = "select item_id as id, item_name as name from base_data where group_name = ? and item_id = ?";
 	
@@ -54,9 +57,11 @@ public class BaseDataDaoImpl implements BaseDataDao {
 	}
 
 	@Override
-	public int deleteInterestById(Integer interestId) {
-		String sql = "delete from user_interest where user_id = ?";
-		return jdbcTemplate.update(sql, interestId);
+	public int deleteInterestsByUserId(Integer userId) {
+		String sql = "selete from user_interest where user_id = ?";
+		return jdbcTemplate.update(sql, userId);
 	}
-
+	
+	
+	
 }

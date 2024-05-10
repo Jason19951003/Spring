@@ -24,7 +24,7 @@ public class UserDaoImpl implements UserDao {
 	
 	@Autowired
 	private BaseDataDao baseDataDao;
-
+	
 	@Override
 	public int addUser(User user) {
 		String sql = "insert into user(name, age, birth, resume, education_id, gender_id) values(?, ?, ?, ?, ?, ?)";
@@ -47,31 +47,31 @@ public class UserDaoImpl implements UserDao {
 		}
 		
 		return userId;
-
 	}
 
 	@Override
 	public int updateUser(Integer userId, User user) {
-		// 更新使用者(table:user)
-		String sql = "update user set name = ?, age=?, birth=?, resume=?, education_id=?, gender_id=? where id=?";
-		int rowCount = jdbcTemplate.update(sql, user.getName(), user.getAge(), user.getBirth(), user.getResume(), user.getEducationId(), userId);
-		
-		// 更新使用者興趣(table:user_interest)
+		// 更新使用者(table: user)
+		String sql = "update user set name=?, age=?, birth=?, resume=?, education_id=?, gender_id=? where id=?";
+		int rowcount = jdbcTemplate.update(sql, user.getName(), user.getAge(), user.getBirth(), user.getResume(), 
+				user.getEducationId(), user.getGenderId(), userId);
+		// 更新使用者的興趣(table:user_interest)
 		// 1. 先刪除該使用者的興趣
-		baseDataDao.deleteInterestById(userId);
+		baseDataDao.deleteInterestsByUserId(userId);
 		// 2. 再新增使用者的興趣
-		for (Integer interestId : user.getInterestIds()) {
+		// 新增該 user 的興趣紀錄
+		for(Integer interestId : user.getInterestIds()) {
 			baseDataDao.addInterest(userId, interestId);
 		}
-		return rowCount;
+		return rowcount;
 	}
 
 	@Override
 	public int deleteUser(Integer userId) {
-		// 1. 先刪除 user_interest
-		baseDataDao.deleteInterestById(userId);
+		// 1. 先刪除該使用者的興趣
+		baseDataDao.deleteInterestsByUserId(userId);
 		// 2. 再刪除該使用者
-		String sql = "delete from user where id = ?";
+		String sql = "delete from user where id=?";
 		return jdbcTemplate.update(sql, userId);
 	}
 

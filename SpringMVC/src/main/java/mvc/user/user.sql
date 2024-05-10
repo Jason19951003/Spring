@@ -49,3 +49,6 @@ insert into user_interest(user_id, interest_id) values(1, 6);
 insert into user_interest(user_id, interest_id) values(2, 2);
 insert into user_interest(user_id, interest_id) values(2, 3);
 insert into user_interest(user_id, interest_id) values(2, 4);
+
+
+

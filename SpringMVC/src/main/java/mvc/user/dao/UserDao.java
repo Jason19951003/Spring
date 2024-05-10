@@ -10,4 +10,5 @@ public interface UserDao {
 	int deleteUser(Integer id);
 	User getUserById(Integer id);
 	List<User> findAllUsers();
+	
 }
