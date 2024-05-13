@@ -49,39 +49,42 @@ public class UserController {
 	@GetMapping
 	// model: 欲將給 jsp 的資料要放在 model 容器中
 	public String queryAllUsers(@ModelAttribute User user, Model model) {
-		List<UserDto> users = userService.findUserDtos();
-		List<Education> educations = baseDataDao.findAllEducations();
-		List<Gender> genders = baseDataDao.findAllGenders();
-		List<Interest> interests = baseDataDao.findAllInterests();
-				
-		model.addAttribute("userDtos", users);
-		model.addAttribute("educations", educations);
-		model.addAttribute("genders", genders);
-		model.addAttribute("interests", interests);
-		
-		user.setAge(18);
-		
+		// 基本要傳給 user.jsp 的資訊
+		addBasicModel(model);
+		// 預設年齡
+		user.setAge(18); 
+		// 完整 jsp(view) 路徑 = "/WEB-INF/view/user/user.jsp";
+		// 因為在 springmvc-servlet.xml
+		// 已經定義: prefix = "/WEB-INF/view/"
+		//        suffix = ".jsp"
+		// 所以只要寫成 "user/user"
 		return "user/user";
+
 	}
 
 	@GetMapping("/{userId}")
-	@ResponseBody
-	public String getUser(@PathVariable("userId") Integer userId) {
+	public String getUser(@PathVariable("userId") Integer userId, Model model) {
 		User user = userService.getUser(userId);
-		return user.toString();
+		// 將 userDtos 資料傳給 jsp
+		model.addAttribute("user", user);
+		// 將 _method="PUT" 傳給 jsp
+		model.addAttribute("_method", "PUT");
+		// 基本要傳給 user.jsp 的資訊
+		addBasicModel(model);
+		return "user/user";
 	}
 
-	@PostMapping	
+	@PostMapping("/")
 	public String createUser(User user) {
 		Boolean success = userService.addUser(user);
 		return "redirect:/mvc/user ";
 	}
 
 	@PutMapping("/{userId}")
-	@ResponseBody
 	public String updateUser(@PathVariable("userId") Integer userId, User user) {
+		System.out.println(user);
 		Boolean success = userService.updateUser(userId, user);
-		return "update: " + success;
+		return "redirect:/mvc/user";
 	}
 
 	@DeleteMapping("/{userId}")
@@ -90,5 +93,17 @@ public class UserController {
 		Boolean success = userService.deleteUser(userId);
 		return "delete: " + success;
 	}
-
+	
+	// 基本要傳給首頁 user.jsp 的資料
+	private void addBasicModel(Model model) {
+		// 基本要傳給 jsp 的資訊
+		List<UserDto> userDtos = userService.findUserDtos();
+		List<Education> educations = baseDataDao.findAllEducations(); // 所有學歷
+		List<Gender> genders = baseDataDao.findAllGenders(); // 所有性別
+		List<Interest> interests = baseDataDao.findAllInterests(); // 所有興趣
+		model.addAttribute("userDtos", userDtos);
+		model.addAttribute("educations", educations);
+		model.addAttribute("genders", genders);
+		model.addAttribute("interests", interests);
+	}
 }
