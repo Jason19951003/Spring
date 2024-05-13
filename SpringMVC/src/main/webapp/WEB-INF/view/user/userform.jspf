@@ -6,43 +6,20 @@
 <!-- Spring Form 表單標籤 -->
 <%@ taglib prefix="sp" uri="http://www.springframework.org/tags/form" %>
 
-<div class="pure-form">
+<sp:form modelAttribute="user" method="post" action="${pageContext.request.contextPath}/mvc/user/${ user.id }" class="pure-form">
 	<fieldset>
-		<legend>
-			User List
-		</legend>
-		
-		<!-- User table -->
-		<table class="pure-table pure-table-bordered">
-			<thead>
-				<tr>
-					<th>序號</th><th>姓名</th><th>性別</th><th>年齡</th><th>生日</th>
-					<th>教育程度</th><th>興趣</th><th>履歷</th><th>修改</th><th>刪除</th>
-				</tr>
-			</thead>
-			<tbody>
-				<c:forEach items="${ userDtos }" var="userDto">
-					<tr>
-						<td>${ userDto.id }</td>
-						<td>${ userDto.name }</td>
-						<td>${ userDto.gender.name }</td>
-						<td>${ userDto.age }</td>
-						<td><fmt:formatDate value="${ userDto.birth }" pattern="yyyy-MM-dd" /></td>
-						<td>${ userDto.education.name }</td>
-						<td>${ userDto.interestNames }</td>
-						<td>${ userDto.resume }</td>
-						<td>
-							<a href="${pageContext.request.contextPath}/mvc/user/${ userDto.id }" class="pure-button">修改</a>
-						</td>
-						<td>
-							<a href="#" class="pure-button">刪除</a>
-						</td>
-					</tr>
-				</c:forEach>
-			</tbody>
-		</table>
-		
-				
+		<legend>User Form</legend>
+		<!-- HttpMethod 隱藏欄位 -->
+		<input name="_method" type="hidden" value="${ _method }" />
+		<!-- 表單元素 -->
+		姓名: <sp:input path="name" /><p />
+		年齡: <sp:input path="age" type="number" /><p />
+		生日: <sp:input path="birth" type="date" /><p />
+		學歷: <sp:select path="educationId" items="${ educations }" itemValue="id" itemLabel="name" /><p />
+		性別: <sp:radiobuttons path="genderId" items="${ genders }" itemValue="id" itemLabel="name" /><p />
+		興趣: <sp:checkboxes path="interestIds" items="${ interests }" itemValue="id" itemLabel="name" /><p />
+		履歷: <sp:textarea path="resume" /><p />
+		<button type="submit" class="pure-button pure-button-primary">新增</button>
 	</fieldset>
-</div>
-  
+	
+</sp:form>
