@@ -1,0 +1,52 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+	google.charts.load('current', {'packages':['corechart']});
+	google.charts.setOnLoadCallback(drawGenderChart);
+	google.charts.setOnLoadCallback(drawEducationChart);
+	
+	function drawEducationChart() {
+		var data = google.visualization.arrayToDataTable([
+			['Item', 'Count'],
+			<c:forEach items="${educationStatistics }" var="stat">
+			['${stat.name}', ${stat.count}],
+			</c:forEach>
+		 ]);
+		
+		var options = {
+		  title: 'Education Statistics',
+		  is3D : true
+		};
+		
+		var chart = new google.visualization.PieChart(document.getElementById('educationChart'));
+		
+		chart.draw(data, options);
+	}
+	
+	function drawGenderChart() {
+	
+	  var data = google.visualization.arrayToDataTable([
+	    ['Item', 'Count'],
+	    <c:forEach items="${genderStatistics }" var="stat">
+	    ['${stat.name}', ${stat.count}],
+	    </c:forEach>
+	  ]);
+	
+	  var options = {
+	    title: 'Gender Statistics'
+	  };
+		// 常用PieChart, ColumnChart, BarChart
+	  var chart = new google.visualization.BarChart(document.getElementById('genderChart'));
+	
+	  chart.draw(data, options);
+	}
+</script>
+
+<table>
+	<tr>
+		<td valign="top"><div id="genderChart" style="width: 700px; height: 500px;"></div></td>
+		<td valign="top"><div id="educationChart" style="width: 700px; height: 500px;"></div></td>
+	</tr>
+ </table>

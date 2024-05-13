@@ -12,6 +12,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import mvc.user.model.po.Education;
+import mvc.user.model.po.Statistics;
 import mvc.user.model.po.User;
 
 @Repository
@@ -102,6 +104,24 @@ public class UserDaoImpl implements UserDao {
 					.map(data->(Integer)data.get("interest_id"))
 					.toArray(Integer[]::new);
 		return interestIds;
+	}
+
+	@Override
+	public List<Statistics> queryGenderStatisticst() {
+		String sql = "SELECT a.gender_id AS id, b.item_name AS name, COUNT(*) AS count "
+				+ "FROM user a, base_data b "
+				+ "WHERE a.gender_id = b.item_id AND b.group_name = 'Gender' "
+				+ "GROUP BY a.gender_id , b.item_name";
+		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Statistics.class));
+	}
+
+	@Override
+	public List<Statistics> queryEducationStatisticst() {
+		String sql = "SELECT a.education_id AS id, b.item_name AS name, COUNT(*) AS count "
+				+ "FROM user a, base_data b "
+				+ "WHERE a.education_id = b.item_id AND b.group_name = 'Education' "
+				+ "GROUP BY a.education_id , b.item_name";
+		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Statistics.class));
 	}
 
 }

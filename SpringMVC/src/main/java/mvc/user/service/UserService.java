@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import mvc.user.dao.BaseDataDao;
 import mvc.user.dao.UserDao;
 import mvc.user.model.dto.UserDto;
+import mvc.user.model.po.Statistics;
 import mvc.user.model.po.User;
 
 @Service
@@ -60,5 +61,15 @@ public class UserService {
 
 	public Boolean deleteUser(Integer userId) {
 		return userDao.deleteUser(userId) > 0;
+	}
+	
+	public List<Statistics> queryStatistics(String statistics) {
+		switch (statistics) {
+		case "Gender":
+			return userDao.queryGenderStatisticst();
+		case "Education":
+			return userDao.queryEducationStatisticst();
+		}
+		return null;
 	}
 }
