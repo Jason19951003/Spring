@@ -87,11 +87,10 @@ public class UserController {
 		return "redirect:/mvc/user";
 	}
 
-	@DeleteMapping("/{userId}")
-	@ResponseBody
+	@DeleteMapping("/{userId}")	
 	public String deleteUser(@PathVariable("userId") Integer userId) {
 		Boolean success = userService.deleteUser(userId);
-		return "delete: " + success;
+		return "redirect:/mvc/user";
 	}
 	
 	// 基本要傳給首頁 user.jsp 的資料
