@@ -7,13 +7,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import mvc.user.dao.BaseDataDao;
 import mvc.user.model.dto.UserDto;
+import mvc.user.model.po.Education;
+import mvc.user.model.po.Gender;
+import mvc.user.model.po.Interest;
 import mvc.user.model.po.User;
 import mvc.user.service.UserService;
 
@@ -37,12 +42,22 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-
+	
+	@Autowired
+	private BaseDataDao baseDataDao;
+	
 	@GetMapping
 	// model: 欲將給 jsp 的資料要放在 model 容器中
-	public String queryAllUsers(User user, Model model) {
+	public String queryAllUsers(@ModelAttribute User user, Model model) {
 		List<UserDto> users = userService.findUserDtos();
+		List<Education> educations = baseDataDao.findAllEducations();
+		List<Gender> genders = baseDataDao.findAllGenders();
+		List<Interest> interests = baseDataDao.findAllInterests();
+				
 		model.addAttribute("userDtos", users);
+		model.addAttribute("educations", educations);
+		model.addAttribute("genders", genders);
+		model.addAttribute("interests", interests);
 		
 		user.setAge(18);
 		
@@ -56,11 +71,10 @@ public class UserController {
 		return user.toString();
 	}
 
-	@PostMapping
-	@ResponseBody
+	@PostMapping	
 	public String createUser(User user) {
 		Boolean success = userService.addUser(user);
-		return "create: " + success;
+		return "redirect:/mvc/user ";
 	}
 
 	@PutMapping("/{userId}")

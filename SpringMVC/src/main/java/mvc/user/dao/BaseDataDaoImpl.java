@@ -52,7 +52,7 @@ public class BaseDataDaoImpl implements BaseDataDao {
 				+ "web.base_data b ON a.interest_id = b.item_id\n"
 				+ "where b.group_name = 'Interest' and a.user_id = ?";
 		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Interest.class), id);
-	}	
+	}
 
 	@Override
 	public Interest getInterestById(Integer id) {

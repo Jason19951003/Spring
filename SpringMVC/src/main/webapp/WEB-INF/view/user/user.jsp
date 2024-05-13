@@ -9,6 +9,7 @@
 		<meta charset="UTF-8">
 		<title>User 首頁</title>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" />
+		<link rel="stylesheet" href="/SpringMVC/css/buttons.css">
 	</head>
 	<body style="padding: 15px;">
 		<h1>User 資料維護</h1>

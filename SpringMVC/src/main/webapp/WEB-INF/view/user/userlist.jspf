@@ -34,8 +34,8 @@
 						<td>${user.education.name }</td>
 						<td>${user.interestNames }</td>
 						<td>${user.resume }</td>
-						<td><a href="#" class="pure-button">修改</a></td>
-						<td><a href="#" class="pure-button">刪除</a></td>
+						<td><a href="#" class="pure-button button-success ">修改</a></td>
+						<td><a href="#" class="pure-button button-error ">刪除</a></td>
 					</tr>
 				</c:forEach>
 			</tbody>
