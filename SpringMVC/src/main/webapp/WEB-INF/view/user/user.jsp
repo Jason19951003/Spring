@@ -16,7 +16,9 @@
 		<table>
 			<tr>
 				<!-- User 表單 -->
-				<td></td>
+				<td>
+					<%@include file="userform.jspf" %>
+				</td>
 				<!-- User 圖表 -->
 				
 				<td></td>
@@ -25,7 +27,7 @@
 			<tr>
 				<!-- User 列表 -->
 				<td colspan="2">
-					<%@include file="usetlist.jspf" %>
+					<%@include file="userlist.jspf" %>
 				</td>
 			</tr>
 		</table>

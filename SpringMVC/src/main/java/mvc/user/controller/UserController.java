@@ -40,9 +40,12 @@ public class UserController {
 
 	@GetMapping
 	// model: 欲將給 jsp 的資料要放在 model 容器中
-	public String queryAllUsers(Model model) {
+	public String queryAllUsers(User user, Model model) {
 		List<UserDto> users = userService.findUserDtos();
 		model.addAttribute("userDtos", users);
+		
+		user.setAge(18);
+		
 		return "user/user";
 	}
 
