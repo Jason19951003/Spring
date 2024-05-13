@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import mvc.user.model.dto.UserDto;
 import mvc.user.model.po.User;
 import mvc.user.service.UserService;
 
@@ -40,8 +41,8 @@ public class UserController {
 	@GetMapping
 	// model: 欲將給 jsp 的資料要放在 model 容器中
 	public String queryAllUsers(Model model) {
-		List<User> users = userService.findUsers();
-		model.addAttribute("users", users);
+		List<UserDto> users = userService.findUserDtos();
+		model.addAttribute("userDtos", users);
 		return "user/user";
 	}
 

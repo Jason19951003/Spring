@@ -44,6 +44,15 @@ public class BaseDataDaoImpl implements BaseDataDao {
 	public List<Interest> findAllInterests() {
 		return jdbcTemplate.query(queryAllSQL, new BeanPropertyRowMapper<>(Interest.class), "Interest");
 	}
+	
+	@Override
+	public List<Interest> findAllInterestsByUserId(Integer id) {
+		String sql = "SELECT a.interest_id as id, b.item_name as name FROM web.user_interest a \n"
+				+ "left join \n"
+				+ "web.base_data b ON a.interest_id = b.item_id\n"
+				+ "where b.group_name = 'Interest' and a.user_id = ?";
+		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Interest.class), id);
+	}	
 
 	@Override
 	public Interest getInterestById(Integer id) {
@@ -61,5 +70,4 @@ public class BaseDataDaoImpl implements BaseDataDao {
 		String sql = "delete from user_interest where user_id = ?";
 		return jdbcTemplate.update(sql, userId);
 	}
-
 }

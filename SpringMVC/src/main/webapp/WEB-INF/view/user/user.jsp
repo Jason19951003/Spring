@@ -25,7 +25,7 @@
 			<tr>
 				<!-- User 列表 -->
 				<td colspan="2">
-					${users }
+					<%@include file="usetlist.jspf" %>
 				</td>
 			</tr>
 		</table>
