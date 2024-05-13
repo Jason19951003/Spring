@@ -12,7 +12,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import mvc.user.model.po.Interest;
 import mvc.user.model.po.User;
 
 @Repository
@@ -29,7 +28,7 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public int addUser(User user) {
-		String sql = "insert into user(name, age, birth, resume, education_id, gender_id) values(?, ?, ?, ?, ?, ?)";
+		String sql = "insert into user(name, age, birth, resume, education_id, gender_id) values(:name, :age, :birth, :resume, :educationId, :genderId)";
 		// return jdbcTemplate.update(sql, user.getName(), user.getAge(),
 		// user.getBirth(), user.getResume(), user.getEducationId(),
 		// user.getGenderId());
@@ -83,20 +82,26 @@ public class UserDaoImpl implements UserDao {
 	public User getUserById(Integer userId) {
 		String sql = "select id, name, age, birth, resume, education_id, gender_id from user where id=?";
 		User user = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), userId);
-		// 查詢興趣並注入
-		String interest_sql = "select user_id, interest_id from user_interest where user_id = ?";
-		List<Map<String, Object>> interestList = jdbcTemplate.queryForList(interest_sql, userId);
-		Integer[] interestIds = interestList.stream()
-					.map(data->(Integer)data.get("interest_id"))
-					.toArray(Integer[]::new);
-		user.setInterestIds(interestIds);
+		if (user != null)
+			user.setInterestIds(getUserInterestIds(userId));
 		return user;
 	}
 
 	@Override
 	public List<User> findAllUsers() {
 		String sql = "select id, name, age, birth, resume, education_id, gender_id from user";
-		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class));
+		List<User> users = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class));
+		users.forEach(user-> user.setInterestIds(getUserInterestIds(user.getId())));
+		return users;
+	}
+	
+	private Integer[] getUserInterestIds(Integer userId) {
+		String interest_sql = "select user_id, interest_id from user_interest where user_id = ?";
+		List<Map<String, Object>> interestList = jdbcTemplate.queryForList(interest_sql, userId);
+		Integer[] interestIds = interestList.stream()
+					.map(data->(Integer)data.get("interest_id"))
+					.toArray(Integer[]::new);
+		return interestIds;
 	}
 
 }
