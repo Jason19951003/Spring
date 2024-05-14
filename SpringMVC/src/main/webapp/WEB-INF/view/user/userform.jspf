@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isErrorPage="True"%>
 <!-- JSTL 標籤 -->    
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -12,14 +11,19 @@
 		<!-- HttpMethod 隱藏欄位 -->
 		<input name="_method" type="hidden" value="${ _method }" />
 		<!-- 表單元素 -->
-		姓名: <sp:input path="name" /><p />
-		年齡: <sp:input path="age" type="number" /><p />
-		生日: <sp:input path="birth" type="date" /><p />
-		學歷: <sp:select path="educationId" items="${ educations }" itemValue="id" itemLabel="name" /><p />
-		性別: <sp:radiobuttons path="genderId" items="${ genders }" itemValue="id" itemLabel="name" /><p />
-		興趣: <sp:checkboxes path="interestIds" items="${ interests }" itemValue="id" itemLabel="name" /><p />
-		履歷: <sp:textarea path="resume" /><p />
+		姓名: <sp:input path="name" /><br/><sp:errors path="name" cssStyle="color: red"></sp:errors><p />
+		年齡: <sp:input path="age" type="number" /><sp:errors path="age" cssStyle="color: red"></sp:errors><p />
+		生日: <sp:input path="birth" type="date" /><sp:errors path="birth" cssStyle="color: red"></sp:errors><p />
+		學歷: <sp:select path="educationId" items="${ educations }" itemValue="id" itemLabel="name" />
+			 <sp:errors path="educationId" cssStyle="color: red"></sp:errors><p />
+		性別: <sp:radiobuttons path="genderId" items="${ genders }" itemValue="id" itemLabel="name" />
+			 <sp:errors path="genderId" cssStyle="color: red"></sp:errors><p />
+		興趣: <sp:checkboxes path="interestIds" items="${ interests }" itemValue="id" itemLabel="name" />
+			 <sp:errors path="interestIds" cssStyle="color: red"></sp:errors><p />
+		履歷: <sp:textarea path="resume" /><sp:errors path="resume" cssStyle="color: red"></sp:errors><p />
 		<button type="submit" class="pure-button pure-button-primary">${ _method eq 'PUT' ? '修改' : '新增' }</button>
+		<!-- 顯示所有錯誤訊息 -->
+		
 	</fieldset>
 	
 </sp:form>
