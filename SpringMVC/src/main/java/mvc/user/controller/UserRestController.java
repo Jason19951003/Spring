@@ -1,0 +1,86 @@
+package mvc.user.controller;
+
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.google.gson.Gson;
+
+import mvc.user.dao.BaseDataDao;
+import mvc.user.model.dto.UserDto;
+import mvc.user.model.po.User;
+import mvc.user.service.UserService;
+
+/**
+ * 定義 URI 服務
+ * ---------------------------------------------------------------------------------
+ * Method | URI          | Description
+ * ---------------------------------------------------------------------------------
+ * GET    | /rest/user   | 取得所有使用者 json 資料
+ * GET    | /rest/user/1 | 根據 userId 取得單筆使用者 json 資料
+ * POST   | /rest/user/  | 新增使用者資料, 會自動夾帶 User 的 json 物件資料上來
+ * PUT    | /rest/user/1 | 修改指定 userId 的使用者資料, 會自動夾帶要修改的 User 的 json 物件資料上來
+ * DELETE | /rest/user/1 | 刪除指定 userId 的使用者紀錄
+ * ---------------------------------------------------------------------------------
+ * URL 範例: GET http://localhost:8080/SpringMVC/mvc/rest/user
+ */
+
+
+@RestController
+@RequestMapping("/rest/user")
+public class UserRestController {
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private BaseDataDao baseDataDao;
+	
+	Gson gson = new Gson();
+	
+	@GetMapping
+	public String queryAllUsers() {
+		List<UserDto> users = userService.findUserDtos();
+		// 回傳JSON 字串
+		return gson.toJson(users);
+	}
+	
+	@GetMapping("/{id}")
+	public String getUser(@PathVariable("id") Integer id) {
+		User user = userService.getUser(id);
+		return gson.toJson(user);
+	}
+	
+	
+	// 新增紀錄
+	@PostMapping
+	public String addUser(@RequestBody String userJsonString) {
+		// 將 userJsonString 轉 User 物件
+		User user = gson.fromJson(userJsonString, User.class);
+		return userService.addUser(user) + "";
+	}
+	
+	// 修改紀錄 PUT
+	@PutMapping("/{userId}")
+	public String updateUser(@PathVariable("userId") Integer userId, @RequestBody String userJsonString) {
+		User user = gson.fromJson(userJsonString, User.class);
+		return userService.updateUser(userId, user) + "";
+	}
+	
+	// 刪除紀錄 Delete
+	@DeleteMapping("/{userId}")
+	public String deleteUser(@PathVariable("userId") Integer userId) {
+		return userService.deleteUser(userId) + "";
+	}
+}

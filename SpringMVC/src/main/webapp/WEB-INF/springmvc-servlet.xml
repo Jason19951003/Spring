@@ -62,16 +62,14 @@
     <tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>
 	
 	<!-- 錯誤訊息設定 properites -->
-	<bean id="messageSource"
-			class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 	    <property name="basename" value="/WEB-INF/resources/errorMessage" />
 	    <property name="useCodeAsDefaultMessage" value="false"/>
 		<property name="defaultEncoding" value="UTF-8"/>
 	</bean>
 	
 	<!-- JSR 303 Validator 驗證: Hibernate Validator 實作驗證配置-->
-    <bean id="validator"
-    		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
     	<property name="providerClass" value="org.hibernate.validator.HibernateValidator" />
     	<property name="validationMessageSource" ref="messageSource" />
     </bean>
@@ -80,8 +78,7 @@
 	<mvc:annotation-driven validator="validator">
 		<mvc:message-converters
 			register-defaults="true">
-			<bean
-				class="org.springframework.http.converter.StringHttpMessageConverter">
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
 				<property name="supportedMediaTypes">
 					<list>
 						<value>text/html;charset=UTF-8</value>

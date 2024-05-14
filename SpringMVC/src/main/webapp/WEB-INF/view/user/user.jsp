@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!-- JSTL 標籤 -->    
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -19,6 +18,12 @@
 		<hr />
 		<table>
 			<tr>
+				<!-- User 列表 -->
+				<td colspan="2" valign="top">
+					<%@ include file="userlist.jspf" %>
+				</td>
+			</tr>
+			<tr>
 				<!-- User 表單 -->
 				<td valign="top">
 					<%@ include file="userform.jspf" %>
@@ -26,12 +31,6 @@
 				<!-- User 圖表 -->
 				<td valign="top">
 					<%@ include file="userstatistics.jspf" %>
-				</td>
-			</tr>
-			<tr>
-				<!-- User 列表 -->
-				<td colspan="2" valign="top">
-					<%@ include file="userlist.jspf" %>
 				</td>
 			</tr>
 		</table>
