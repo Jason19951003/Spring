@@ -99,6 +99,7 @@ public class UserController {
 			addBasicModel(model);
 			// 有錯誤的user 資料也一併帶入給表單使用
 			// 內涵錯誤的原因
+			user.setId(userId);
 			model.addAttribute("user", user);
 			// 要傳PUT
 			model.addAttribute("_method", "PUT");
