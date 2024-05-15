@@ -24,6 +24,8 @@ const fetchAndRenderData = async(url, containerId, renderFn) => {
 			$(containerId).innerHTML = renderFn(data);
 		}*/
 		$(containerId).innerHTML = Array.isArray(data) ? data.map(renderFn).join('') : renderFn(data);
+		$("user-button").textContent = "新增";
+		$('user-form').reset();
 	} catch(e) {
 		console.error(e);
 	}
@@ -80,9 +82,12 @@ const handleFormSubmit = async(event) => {
         interestIds: Array.from($('interestIds').selectedOptions).map(option => parseInt(option.value)),
         resume: $('resume').value
 	};
-	
-	const response = await fetch('http://localhost:8080/SpringMVC/mvc/rest/user', {
-		method: 'POST',
+	var flag = $('user-button').textContent == '修改';
+	var url = flag ? 'http://localhost:8080/SpringMVC/mvc/rest/user/'+ $('id').value : 'http://localhost:8080/SpringMVC/mvc/rest/user';
+	console.log(url);
+	var method = flag ? 'PUT' : 'POST';
+	const response = await fetch(url, {
+		method: method,
 		headers: {
 			'Content-Type': 'application/json'
 		},
@@ -117,7 +122,28 @@ document.addEventListener("DOMContentLoaded", async() => {
 	$('user-form').addEventListener("submit", handleFormSubmit);
 });
 
-const handleUpdateUser = (id) => { console.log('按下修改' + id) };
+const handleUpdateUser = async(id) => { 
+	const fullurl = 'http://localhost:8080/SpringMVC/mvc/rest/user/' + id;
+	const response = await fetch(fullurl, {method: 'GET'});
+	const {state, message, data} = await response.json();
+	$('id').value = data.id;
+	$('name').value = data.name;
+	$('age').value = data.age;
+	$('birth').value = data.birth;
+	$('resume').value = data.resume;
+	$('educationId').value = data.educationId;
+	const radios = document.getElementsByName("genderId");
+	radios.forEach(radio => {
+		if (radio.value == data.genderId) {
+			radio.checked = true;
+		}
+	});
+	const select = $("interestIds");
+	for (var i = 0; i < select.options.length; i++) {
+		select.options[i].selected = data.interestIds.includes(parseInt(select.options[i].value));
+	}
+	$("user-button").textContent = "修改";
+};
 const handleDeleteUser = async(id) => {
 	const result = await Swal.fire({
 		title: '確定要刪除嗎?',
@@ -129,7 +155,7 @@ const handleDeleteUser = async(id) => {
 	});
 	
 	if(result.isConfirmed) {
-		const fullurl = 'http://localhost:8080/SpringMVC/mvc/rest/user/' + id;	
+		const fullurl = 'http://localhost:8080/SpringMVC/mvc/rest/user/' + id;
 		const response = await fetch(fullurl, {method : 'DELETE'}); // 等待fetch 請求完成
 		const {state, message, data} = await response.json(); // 等待回應本文內容
 		console.log({state, message, data});

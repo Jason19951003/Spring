@@ -2,7 +2,7 @@
 	<form id="user-form" class="pure-form" method="POST">
 		<fieldset>
 			<legend>User Form</legend>
-
+			<input type="hidden" id="id" name="id">
 			<label for="name">姓名:</label> 
 			<input type="text" id="name" name="name" required>
 			<p />
@@ -36,7 +36,7 @@
 			<textarea id="resume" name="resume" required></textarea>
 			<p />
 
-			<button type="submit" class="pure-button pure-button-primary">新增</button>
+			<button id="user-button" type="submit" class="pure-button pure-button-primary">新增</button>
 		</fieldset>
 	</form>
 </div>
