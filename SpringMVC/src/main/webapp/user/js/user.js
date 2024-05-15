@@ -16,7 +16,7 @@ const fetchAndRenderData = async(url, containerId, renderFn) => {
 	try {
 		const response = await fetch(fullurl); // 等待fetch 請求完成
 		const {state, message, data} = await response.json(); // 等待回應本文內容
-		//console.log(state, message, data);
+		console.log(state, message, data);
 		//console.log(renderFn(data[0]));
 		/*if(Arrays.isArray(data)) {
 			$(containerId).innerHTML = data.map(renderFn).join('');
@@ -42,6 +42,60 @@ const renderUser = ({id, name, gender, age, birth, education,interestNames, resu
 		</td>
 	</tr>
 `;
+// 加載表單選項(學歷, 興趣)
+const loadFormOptions = async() => {
+	// 加載學歷選項
+	const educationOptions = await fetch('http://localhost:8080/SpringMVC/mvc/rest/user/educations');
+	var {state, message, data} = await educationOptions.json();
+	console.log(data);
+	// 將data逐筆放入下拉選單中
+	data.forEach(education => {
+		const opt = document.createElement('option');
+		opt.value = education.id;
+		opt.textContent = education.name;
+		$('educationId').appendChild(opt);
+	});
+	
+	// 加載興趣選項
+	const interestsOption = await fetch('http://localhost:8080/SpringMVC/mvc/rest/user/interests');
+	var {state, message, data} = await interestsOption.json();
+	data.forEach(interest => {
+		const opt = document.createElement('option');
+		opt.value = interest.id;
+		opt.textContent = interest.name;
+		$('interestIds').appendChild(opt);
+	});
+	console.log(data);
+};
+
+const handleFormSubmit = async(event) => {
+	event.preventDefault();	// 停止表單的預設傳送行為, 改為自訂行為, 以下是自訂行為的邏輯
+	
+	const formData = {
+		name: $('name').value,
+        age: parseInt($('age').value),
+        birth: $('birth').value,
+        educationId: parseInt($('educationId').value),
+        genderId: parseInt(document.querySelector('input[name="genderId"]:checked').value),
+        interestIds: Array.from($('interestIds').selectedOptions).map(option => parseInt(option.value)),
+        resume: $('resume').value
+	};
+	
+	const response = await fetch('http://localhost:8080/SpringMVC/mvc/rest/user', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(formData)
+	});
+	
+	var {state, message, data} = await response.json();
+	console.log(message);
+	
+	// 重新資料渲染(fetch取資料+渲染)
+	fetchAndRenderData('/mvc/rest/user', 'user-list-body', renderUser);
+};
+
 
 // 待 DOM 加載完成之後再執行
 document.addEventListener("DOMContentLoaded", async() => {
@@ -57,10 +111,14 @@ document.addEventListener("DOMContentLoaded", async() => {
 		await handleEvent(event, 'update-user-button', handleUpdateUser);
 		await handleEvent(event, 'delete-user-button', handleDeleteUser);
 	});
+	// 加載表單選項
+	loadFormOptions();
+	// 監聽UserForm
+	$('user-form').addEventListener("submit", handleFormSubmit);
 });
 
 const handleUpdateUser = (id) => { console.log('按下修改' + id) };
-const handleDeleteUser = async(id) => {	
+const handleDeleteUser = async(id) => {
 	const result = await Swal.fire({
 		title: '確定要刪除嗎?',
 		text: '刪除後無法恢復',

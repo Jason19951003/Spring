@@ -17,6 +17,8 @@ import com.google.gson.Gson;
 
 import mvc.user.dao.BaseDataDao;
 import mvc.user.model.dto.UserDto;
+import mvc.user.model.po.Education;
+import mvc.user.model.po.Interest;
 import mvc.user.model.po.User;
 import mvc.user.model.response.ApiResponse;
 import mvc.user.service.UserService;
@@ -46,6 +48,20 @@ public class UserRestController {
 	private BaseDataDao baseDataDao;
 	
 	Gson gson = new Gson();
+	
+	@GetMapping("/educations")
+	public ResponseEntity<ApiResponse<List<Education>>> queryEducations() {
+		List<Education> educations = baseDataDao.findAllEducations();
+		ApiResponse apiResponse = new ApiResponse<>(true, "query education success", educations);
+		return ResponseEntity.ok(apiResponse);
+	}
+	
+	@GetMapping("/interests")
+	public ResponseEntity<ApiResponse<List<Interest>>> queryInterests() {
+		List<Interest> interests = baseDataDao.findAllInterests();
+		ApiResponse apiResponse = new ApiResponse<>(true, "query interest success", interests);
+		return ResponseEntity.ok(apiResponse);
+	}
 	
 	@GetMapping
 	public ResponseEntity<ApiResponse<List<UserDto>>> queryAllUsers() {
