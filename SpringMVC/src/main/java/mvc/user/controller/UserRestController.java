@@ -75,21 +75,38 @@ public class UserRestController {
 	public ResponseEntity<ApiResponse<User>> addUser(@RequestBody User user) {
 		// 將 userJsonString 轉 User 物件
 		Integer userId = userService.addUserAndGetId(user);
-		user.setId(userId);
-		ApiResponse apiResponse = new ApiResponse<>(true, "add success", user);
-		return  ResponseEntity.ok(apiResponse);
+		if (userId != null) {
+			user.setId(userId);
+			ApiResponse apiResponse = new ApiResponse<>(true, "add success", user);
+			return  ResponseEntity.ok(apiResponse);
+		}
+		ApiResponse apiResponse = new ApiResponse<>(false, "add fail", user);
+		return ResponseEntity.ok(apiResponse);
 	}
 	
 	// 修改紀錄 PUT
 	@PutMapping("/{userId}")
-	public String updateUser(@PathVariable("userId") Integer userId, @RequestBody String userJsonString) {
-		User user = gson.fromJson(userJsonString, User.class);
-		return userService.updateUser(userId, user) + "";
+	public ResponseEntity<ApiResponse<User>> updateUser(@PathVariable("userId") Integer userId, @RequestBody User user) {
+		Boolean state =userService.updateUser(userId, user);
+		user.setId(userId);
+		String message = state ? "update success" : "update fail";
+		ApiResponse apiResponse = new ApiResponse<>(state, message, user);
+		return ResponseEntity.ok(apiResponse);
 	}
 	
 	// 刪除紀錄 Delete
 	@DeleteMapping("/{userId}")
-	public String deleteUser(@PathVariable("userId") Integer userId) {
-		return userService.deleteUser(userId) + "";
+	public ResponseEntity<ApiResponse<User>> deleteUser(@PathVariable("userId") Integer userId) {
+		User user = null;
+		try {
+			user = userService.getUser(userId);
+			Boolean state = userService.deleteUser(userId);
+			String message = state ? "delete success" : "delete fail";
+			ApiResponse apiResponse = new ApiResponse<>(state, message, user);
+			return ResponseEntity.ok(apiResponse);
+		} catch (Exception e) {
+			ApiResponse apiResponse = new ApiResponse<>(false, e.toString(), user);
+			return ResponseEntity.ok(apiResponse);
+		}
 	}
 }
