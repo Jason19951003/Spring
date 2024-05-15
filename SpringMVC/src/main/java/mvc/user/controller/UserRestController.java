@@ -3,6 +3,7 @@ package mvc.user.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import com.google.gson.Gson;
 import mvc.user.dao.BaseDataDao;
 import mvc.user.model.dto.UserDto;
 import mvc.user.model.po.User;
+import mvc.user.model.response.ApiResponse;
 import mvc.user.service.UserService;
 
 /**
@@ -46,25 +48,36 @@ public class UserRestController {
 	Gson gson = new Gson();
 	
 	@GetMapping
-	public String queryAllUsers() {
+	public ResponseEntity<ApiResponse<List<UserDto>>> queryAllUsers() {
 		List<UserDto> users = userService.findUserDtos();
+		ApiResponse apiResponse = new ApiResponse<>(true, "success", users);
 		// 回傳JSON 字串
-		return gson.toJson(users);
+		return ResponseEntity.ok(apiResponse);
 	}
 	
 	@GetMapping("/{id}")
-	public String getUser(@PathVariable("id") Integer id) {
-		User user = userService.getUser(id);
-		return gson.toJson(user);
+	public ResponseEntity<ApiResponse<User>> getUser(@PathVariable("id") Integer id) {
+		try {
+			User user = userService.getUser(id);
+			ApiResponse apiResponse = new ApiResponse<>(true, "success", user);
+			return ResponseEntity.ok(apiResponse);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ApiResponse apiResponse = new ApiResponse<>(false, e.getMessage(), null);
+			return ResponseEntity.ok(apiResponse);
+		}
+		
 	}
 	
 	
 	// 新增紀錄
 	@PostMapping
-	public String addUser(@RequestBody String userJsonString) {
+	public ResponseEntity<ApiResponse<User>> addUser(@RequestBody User user) {
 		// 將 userJsonString 轉 User 物件
-		User user = gson.fromJson(userJsonString, User.class);
-		return userService.addUser(user) + "";
+		Integer userId = userService.addUserAndGetId(user);
+		user.setId(userId);
+		ApiResponse apiResponse = new ApiResponse<>(true, "add success", user);
+		return  ResponseEntity.ok(apiResponse);
 	}
 	
 	// 修改紀錄 PUT

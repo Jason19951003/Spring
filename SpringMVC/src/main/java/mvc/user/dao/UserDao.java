@@ -2,7 +2,6 @@ package mvc.user.dao;
 
 import java.util.List;
 
-import mvc.user.model.po.Education;
 import mvc.user.model.po.Statistics;
 import mvc.user.model.po.User;
 
