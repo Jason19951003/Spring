@@ -12,7 +12,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import mvc.user.model.po.Education;
 import mvc.user.model.po.Statistics;
 import mvc.user.model.po.User;
 

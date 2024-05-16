@@ -16,7 +16,7 @@ const fetchAndRenderData = async(url, containerId, renderFn) => {
 	try {
 		const response = await fetch(fullurl); // 等待fetch 請求完成
 		const {state, message, data} = await response.json(); // 等待回應本文內容
-		console.log(state, message, data);
+		// console.log(state, message, data);
 		//console.log(renderFn(data[0]));
 		/*if(Arrays.isArray(data)) {
 			$(containerId).innerHTML = data.map(renderFn).join('');
@@ -25,7 +25,7 @@ const fetchAndRenderData = async(url, containerId, renderFn) => {
 		}*/
 		$(containerId).innerHTML = Array.isArray(data) ? data.map(renderFn).join('') : renderFn(data);
 		$("user-button").textContent = "新增";
-		$('user-form').reset();
+		$("user-form").reset();
 	} catch(e) {
 		console.error(e);
 	}
@@ -49,7 +49,7 @@ const loadFormOptions = async() => {
 	// 加載學歷選項
 	const educationOptions = await fetch('http://localhost:8080/SpringMVC/mvc/rest/user/educations');
 	var {state, message, data} = await educationOptions.json();
-	console.log(data);
+	// console.log(data);
 	// 將data逐筆放入下拉選單中
 	data.forEach(education => {
 		const opt = document.createElement('option');
@@ -67,7 +67,7 @@ const loadFormOptions = async() => {
 		opt.textContent = interest.name;
 		$('interestIds').appendChild(opt);
 	});
-	console.log(data);
+	// console.log(data);
 };
 
 const handleFormSubmit = async(event) => {
@@ -84,7 +84,7 @@ const handleFormSubmit = async(event) => {
 	};
 	var flag = $('user-button').textContent == '修改';
 	var url = flag ? 'http://localhost:8080/SpringMVC/mvc/rest/user/'+ $('id').value : 'http://localhost:8080/SpringMVC/mvc/rest/user';
-	console.log(url);
+	// console.log(url);
 	var method = flag ? 'PUT' : 'POST';
 	const response = await fetch(url, {
 		method: method,
@@ -95,7 +95,7 @@ const handleFormSubmit = async(event) => {
 	});
 	
 	var {state, message, data} = await response.json();
-	console.log(message);
+	// console.log(message);
 	
 	// 重新資料渲染(fetch取資料+渲染)
 	fetchAndRenderData('/mvc/rest/user', 'user-list-body', renderUser);
@@ -158,7 +158,7 @@ const handleDeleteUser = async(id) => {
 		const fullurl = 'http://localhost:8080/SpringMVC/mvc/rest/user/' + id;
 		const response = await fetch(fullurl, {method : 'DELETE'}); // 等待fetch 請求完成
 		const {state, message, data} = await response.json(); // 等待回應本文內容
-		console.log({state, message, data});
+		// console.log({state, message, data});
 		fetchAndRenderData('/mvc/rest/user', 'user-list-body', renderUser);
 	}
 };
