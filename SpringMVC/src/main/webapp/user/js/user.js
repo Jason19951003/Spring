@@ -17,7 +17,7 @@ const fetchAndRenderData = async(url, containerId, renderFn) => {
 		const response = await fetch(fullurl); // 等待fetch 請求完成
 		const {state, message, data} = await response.json(); // 等待回應本文內容
 		// console.log(state, message, data);
-		//console.log(renderFn(data[0]));
+		// console.log(renderFn(data[0]));
 		/*if(Arrays.isArray(data)) {
 			$(containerId).innerHTML = data.map(renderFn).join('');
 		} else {
@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", async() => {
 	$('user-form').addEventListener("submit", handleFormSubmit);
 });
 
-const handleUpdateUser = async(id) => { 
+const handleUpdateUser = async(id) => {
 	const fullurl = 'http://localhost:8080/SpringMVC/mvc/rest/user/' + id;
 	const response = await fetch(fullurl, {method: 'GET'});
 	const {state, message, data} = await response.json();
@@ -132,18 +132,20 @@ const handleUpdateUser = async(id) => {
 	$('birth').value = data.birth;
 	$('resume').value = data.resume;
 	$('educationId').value = data.educationId;
-	const radios = document.getElementsByName("genderId");
+	document.querySelector(`input[name="genderId"][value="${data.genderId}"]`).checked = true;
+	/*const radios = document.getElementsByName("genderId");
 	radios.forEach(radio => {
 		if (radio.value == data.genderId) {
 			radio.checked = true;
 		}
-	});
+	});*/
 	const select = $("interestIds");
 	for (var i = 0; i < select.options.length; i++) {
 		select.options[i].selected = data.interestIds.includes(parseInt(select.options[i].value));
 	}
 	$("user-button").textContent = "修改";
 };
+
 const handleDeleteUser = async(id) => {
 	const result = await Swal.fire({
 		title: '確定要刪除嗎?',
