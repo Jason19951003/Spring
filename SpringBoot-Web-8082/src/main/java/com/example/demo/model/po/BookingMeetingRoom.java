@@ -14,5 +14,5 @@ public class BookingMeetingRoom {
 	private Integer roomId;
     private Integer userId;
     private String bookingDate;
-    private Timestamp timestamp;
+    private Timestamp createDate;
 }
