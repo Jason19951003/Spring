@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.model.dto.BookingMeetingRoomDto;
 import com.example.demo.model.po.BookingMeetingRoom;
@@ -29,7 +28,8 @@ public class BookingController {
 	public String index(@ModelAttribute BookingMeetingRoom bookingMeetingRoom, Model model) {
 		List<BookingMeetingRoomDto> bookingDtos = bookingService.findAllBookingMeetingRooms();
 		model.addAttribute("bookingDtos", bookingDtos);
-		model.addAttribute("rooms", bookingService.findAllRooms());
+		model.addAttribute("rooms", bookingService.findAllRooms()); // 給下拉選單用
+		model.addAttribute("users", bookingService.findAllUsers()); // 給下拉選單用
 		return "index";
 	}
 	
