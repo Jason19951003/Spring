@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookingMeetingRoom {
-	private Integer bookingId; 
+	private Integer bookingId;
 	private Integer roomId;
-    private Integer userId;     
+    private Integer userId;
     private String bookingDate;
     private Timestamp timestamp;
 }

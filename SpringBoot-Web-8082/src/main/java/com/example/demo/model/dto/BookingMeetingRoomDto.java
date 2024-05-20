@@ -13,11 +13,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookingMeetingRoomDto {
-	private Integer bookingId; 
+	private Integer bookingId;
 	private Integer roomId;
-    private Integer userId;     
+    private Integer userId;
     private String bookingDate;
-    private Timestamp timestamp;
+    private Timestamp createDate;
     
     // 關聯欄位(多對一)
     private MeetingRoom  meetingRoom;
