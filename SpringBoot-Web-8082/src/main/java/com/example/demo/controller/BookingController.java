@@ -5,15 +5,20 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.model.dto.BookingMeetingRoomDto;
 import com.example.demo.model.po.BookingMeetingRoom;
+import com.example.demo.model.po.MeetingRoom;
+import com.example.demo.model.po.User;
 import com.example.demo.service.BookingService;
-
+import com.example.demo.service.UserService;
 
 /**
  * GET  /booking 首頁(預約會議室表單, 列出所有會議室預約情形)
@@ -26,29 +31,41 @@ public class BookingController {
 	@Autowired
 	private BookingService bookingService;
 	
+	@Autowired
+	private UserService userService;
+	
 	@GetMapping
 	public String index(@ModelAttribute BookingMeetingRoom bookingMeetingRoom, Model model) {
-		List<BookingMeetingRoomDto> bookingDtos = bookingService.findAllBookingMeetingRooms();
-		model.addAttribute("bookingDtos", bookingDtos);
-		model.addAttribute("rooms", bookingService.findAllRooms()); // 給下拉選單用
-		model.addAttribute("users", bookingService.findAllUsers()); // 給下拉選單用
+		List<BookingMeetingRoomDto> bookingDtos = bookingService.findAllBookings();
+		List<MeetingRoom> rooms = bookingService.findAllRooms();
+		List<User> users = userService.findAllUsers();
+		model.addAttribute("bookingDtos", bookingDtos); // 給列表用
+		model.addAttribute("rooms", rooms); // 給表單下拉選單用
+		model.addAttribute("users", users); // 給表單下拉選單用
 		return "index";
+	}
+	
+	@GetMapping("/findAll")
+	public String findAll(Model model) {
+		List<BookingMeetingRoomDto> bookingDtos = bookingService.findAllBookings();
+		model.addAttribute("bookingDtos", bookingDtos); // 給列表用
+		return "list_booking";
 	}
 	
 	@PostMapping
 	public String add(@ModelAttribute BookingMeetingRoom bookingMeetingRoom, Model model) {
 		try {
-			Integer rowConut = bookingService.addBookRoom(bookingMeetingRoom.getRoomId(),
-					   bookingMeetingRoom.getUserId(),
-					   bookingMeetingRoom.getBookingDate());
-
-			String message = "新增" + ((rowConut == 1) ? "成功" : "失敗");
+			Integer rowcount = bookingService.addBooking(bookingMeetingRoom.getRoomId(), 
+									  bookingMeetingRoom.getUserId(),
+									  bookingMeetingRoom.getBookingDate());
+			
+			String message = "新增" + ((rowcount == 1)?"成功":"失敗");
 			model.addAttribute("message", message);
 		} catch (Exception e) {
 			String message = "新增錯誤:";
-			// unique_roomId_and_bookingDate 建立表單時的表單約束條件
-			if (e.getMessage().contains("unique_roomId_and_bookingDate")) {
-				message += "該會議室當日已經有人預定";
+			// "unique_roomId_and_bookingDate" 是在建立資料表時的表單約束條件
+			if(e.getMessage().contains("unique_roomId_and_bookingDate")) {
+				message += "該會議室當日已經有人預訂"; 
 			} else {
 				message += e.getMessage();
 			}
@@ -57,4 +74,21 @@ public class BookingController {
 		return "result";
 	}
 	
+	@DeleteMapping
+	public String cancel(@RequestParam("bookingId") Integer bookingId, Model model) {
+		int rowcount = bookingService.cancelBooking(bookingId);
+		String message = "取消" + ((rowcount == 1)?"成功":"失敗");
+		model.addAttribute("message", message);
+		return "result";
+	}
+	
 }
+
+
+
+
+
+
+
+
+

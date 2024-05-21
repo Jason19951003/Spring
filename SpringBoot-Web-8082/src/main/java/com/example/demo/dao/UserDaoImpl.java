@@ -12,7 +12,7 @@ import com.example.demo.model.po.User;
 
 @Repository
 public class UserDaoImpl implements UserDao {
-
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
@@ -24,7 +24,7 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public Optional<User> getUser(Integer id) {
-		String sql = "select id, name from user where id = ?";
+		String sql = "select id, name from user where id=?";
 		try {
 			User user = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), id);
 			return Optional.of(user);
@@ -33,5 +33,5 @@ public class UserDaoImpl implements UserDao {
 		}
 		return Optional.of(null);
 	}
-
+	
 }

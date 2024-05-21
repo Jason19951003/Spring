@@ -1,4 +1,3 @@
-
 drop table if exists BookingMeetingRoom;
 drop table if exists MeetingRoom;
 -- 建立 MeetingRoom
@@ -26,5 +25,9 @@ insert into MeetingRoom(roomId, roomName, roomSize) values(102, '102(M)', 25);
 insert into MeetingRoom(roomId, roomName, roomSize) values(203, '203(L)', 50);
 insert into MeetingRoom(roomId, roomName, roomSize) values(404, '404(2L)', 100);
 
-insert into BookingMeetingRoom(roomId, userId, bookingDate) values(101, 2, '2024-05-20');
-insert into BookingMeetingRoom(roomId, userId, bookingDate) values(102, 5, '2024-05-20');
+insert into BookingMeetingRoom(roomId, userId, bookingDate) values(101, 1, '2024-05-20');
+insert into BookingMeetingRoom(roomId, userId, bookingDate) values(102, 2, '2024-05-20');
+
+
+
+

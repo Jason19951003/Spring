@@ -7,8 +7,6 @@ import com.example.demo.model.po.MeetingRoom;
 
 public interface RoomDao {
 	List<MeetingRoom> findAllRooms();
-	
-	Optional<MeetingRoom> getRoom(Integer id);
-	
+	Optional<MeetingRoom> getRoom(Integer roomId);
 	Integer addRoom(MeetingRoom room);
 }
