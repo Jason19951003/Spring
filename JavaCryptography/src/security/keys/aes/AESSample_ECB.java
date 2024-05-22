@@ -9,13 +9,13 @@ import javax.crypto.spec.SecretKeySpec;
 import security.KeyUtil;
 
 // AES 對稱式加密
-public class AESSample {
+public class AESSample_ECB {
 
 	public static void main(String[] args) throws Exception {
 		// 建立一個AES的key(AES-128 bits, 16 bytes)
 		final String KEY = "0123456789abcdef";
 		
-		System.out.println("AET 加密範例");
+		System.out.println("AES 加密範例");
 		
 		String orginalText = "不能說的秘密";
 		System.out.println("原始訊息(明文):" + orginalText);
