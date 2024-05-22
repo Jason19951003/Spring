@@ -1,6 +1,5 @@
 package security.keys.aes;
 
-import java.nio.charset.Charset;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Base64;

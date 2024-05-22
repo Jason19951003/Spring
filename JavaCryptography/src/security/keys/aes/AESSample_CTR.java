@@ -18,7 +18,7 @@ public class AESSample_CTR {
 		byte[] iv = new byte[16];
 		SecureRandom secureRandom = new SecureRandom();
 		secureRandom.nextBytes(iv);
-		// ---------------加密---------------
+		// --------------加密----------------
 		byte[] encryptedCTR = KeyUtil.encryptWithAESKeyAndIVInCTRMode(aesKeySpec, "蔬菜蛋餅", iv);
 		System.out.println("CTR加密後: " + Base64.getEncoder().encodeToString(encryptedCTR));
 		// --------------解密----------------
