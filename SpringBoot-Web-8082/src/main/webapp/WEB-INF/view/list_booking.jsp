@@ -10,6 +10,7 @@
 		<meta charset="UTF-8">
 		<title>List Booking</title>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" />
+		<script type="text/javascript" src="/js/booking.js"></script>
 	</head>
 	<body style="padding: 0px">
 		<!-- 
@@ -32,20 +33,26 @@
 							<tr>
 								<td>${ booking.bookingId }</td>
 								<td>${ booking.roomId }</td>
-								<td>${ booking.userId }</td>
-								<td>${ booking.bookingDate }</td>
+								<td>${ booking.userId }</td>									
+								<td>									
+									<span class="date-text" data-booking-id=${booking.bookingId }>
+										${ booking.bookingDate }
+									</span>
+									<input class="date-input" type="date" 
+										   data-booking-id="${ booking.bookingId }"
+										   value="${ booking.bookingDate }" style="display: true"/>
+
+								</td>
 								<td>${ booking.createDate }</td>
 								<td>${ booking.meetingRoom.roomName }</td>
 								<td>${ booking.meetingRoom.roomSize }</td>
 								<td>${ booking.user.name }</td>
 							</tr>
 						</c:forEach>
-					</tbody>
-					
+					</tbody>					
 				</table>
 			</fieldset>
 		</div>
-		
 	</body>
 </html>
 

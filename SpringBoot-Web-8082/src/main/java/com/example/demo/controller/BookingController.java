@@ -35,7 +35,9 @@ public class BookingController {
 	private UserService userService;
 	
 	@GetMapping
-	public String index(@ModelAttribute BookingMeetingRoom bookingMeetingRoom, Model model) {
+	public String index(@ModelAttribute BookingMeetingRoom bookingMeetingRoom, 
+						@ModelAttribute MeetingRoom meetingRoom,
+						Model model) {
 		List<BookingMeetingRoomDto> bookingDtos = bookingService.findAllBookings();
 		List<MeetingRoom> rooms = bookingService.findAllRooms();
 		List<User> users = userService.findAllUsers();
@@ -74,6 +76,25 @@ public class BookingController {
 		return "result";
 	}
 	
+	@PostMapping("/room")
+	public String addRoom(@ModelAttribute MeetingRoom meetingRoom, Model model) {
+		try {
+			Integer rowcount = bookingService.addRoom(meetingRoom.getRoomId(), meetingRoom.getRoomName(), meetingRoom.getRoomSize());
+			String message = "新增會議室" + ((rowcount == 1)?"成功":"失敗");
+			model.addAttribute("message", message);
+		} catch (Exception e) {
+			String message = "新增會議室錯誤:";
+			if (e.getMessage().contains("Duplicate")) {
+				message += "該會議室Id重複";
+			} else {
+				message += e.getMessage();
+			}
+			model.addAttribute("message", message);
+		}
+		
+		return "result";
+	}
+
 	@DeleteMapping
 	public String cancel(@RequestParam("bookingId") Integer bookingId, Model model) {
 		int rowcount = bookingService.cancelBooking(bookingId);

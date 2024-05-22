@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" isErrorPage="true"
     pageEncoding="UTF-8"%>
 <!-- Tomcat 10.x JSTL -->    
@@ -28,7 +29,7 @@
 	<body style="padding: 15px">
 		<table>
 			<tr>
-				<td valign="top">
+				<td valign="top" width="25%">
 					<!-- 預約表單 -->
 					<sp:form modelAttribute="bookingMeetingRoom" 
 							 method="post" 
@@ -46,7 +47,8 @@
 							<button type="submit" class="pure-button pure-button-primary">送出</button>	
 						</fieldset>
 					</sp:form>
-					
+				</td>
+				<td valign="top" width="25%">	
 					<!-- 取消預約 -->
 					<form class="pure-form" method="post" action="/booking" target="resultFrame">
 						<fieldset>
@@ -56,7 +58,8 @@
 							<button type="submit" class="pure-button pure-button-primary">送出</button>
 						</fieldset>
 					</form>
-					
+				</td>
+				<td valign="top" width="25%">	
 					<!-- 查詢預約 -->
 					<form class="pure-form" method="get" action="/booking/findAll" target="resultFrame">
 						<fieldset>
@@ -64,13 +67,36 @@
 							<button type="submit" class="pure-button pure-button-primary">查詢</button>
 						</fieldset>
 					</form>
-					
-					<!-- 新增會議室 -->
-					
 				</td>
+				<td valign="top" width="25%">	
+					<!-- 新增會議室 -->
+					<!-- 
+					<form class="pure-form" method="post" action="/booking/room" target="resultFrame">
+						<fieldset>
+							<legend>新增會議室(傳統表單)</legend>
+							會議室Id: <input type="number" id="roomId" name="roomId" required="required" /><p />
+							會議室名稱: <input type="text" id="roomName" name="roomName" required="required" /><p />
+							會議室人數: <input type="number" id="roomSize" name="roomSize" required="required" /><p />
+							<button type="submit" class="pure-button pure-button-primary">送出</button>
+						</fieldset>
+					</form>
+					 -->
+					<sp:form class="pure-form" method="post" action="/booking/room" target="resultFrame" 
+							 modelAttribute="meetingRoom">
+						<fieldset>
+							<legend>新增會議室(SP表單)</legend>
+							會議室Id: <sp:input type="number" path="roomId" required="required" /><p />
+							會議室名稱: <sp:input type="text" path="roomName"  name="roomName" required="required" /><p />
+							會議室人數: <sp:input type="number" path="roomSize" required="required" /><p />
+							<button type="submit" class="pure-button pure-button-primary">送出</button>
+						</fieldset>
+					</sp:form>
+				</td>
+			</tr>	
+			<tr>	
 				<!-- 回應結果 -->
-				<td valign="top">
-					<iframe name="resultFrame" style="border: 0px" width="1200px" height="1000px"></iframe>
+				<td valign="top" colspan="4">
+					<iframe name="resultFrame" style="border: 0px" width="1200px" height="1000px" src="/booking/findAll"></iframe>
 				</td>
 			</tr>
 		</table>
@@ -78,10 +104,3 @@
 		
 	</body>
 </html>
-
-
-
-
-
-
-
