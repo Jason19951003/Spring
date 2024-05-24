@@ -13,7 +13,7 @@ public class LineNotifyDemo {
         String stickerId = "52114110";
         // 2. 存取權杖(也稱為:授權 Token)
         
-        String token = "nfcntSToMUSlOAJmnFmPm8zeVvqAU7XGPfyPNoJghND";
+        String token = "你的token";
         // 3. Line Notify 的發送位置
         String lineNotifyUrl = "https://notify-api.line.me/api/notify";
 
