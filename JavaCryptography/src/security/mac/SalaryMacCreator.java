@@ -1,5 +1,7 @@
 package security.mac;
 
+import java.io.File;
+
 import javax.crypto.SecretKey;
 
 import security.KeyUtil;
@@ -22,10 +24,17 @@ public class SalaryMacCreator {
 		String filePath = "src/security/mac/my_salary.txt";
 		
 		// 建立 HMAC 密鑰
-		SecretKey macKey = KeyUtil.generateKeyForHmac();
+		SecretKey macKey = null;
 		
 		// 將密鑰保存到檔案中
+		// 若macKey以存在,則不需要再另外產生
 		String keyPath = "src/security/mac/macKey.key";
+		if (new File(keyPath).exists()) {
+			macKey = KeyUtil.getSecretKeyFromFile("HmacSHA256", keyPath);
+		} else {
+			macKey = KeyUtil.generateKeyForHmac();
+		}
+		
 		KeyUtil.saveKeyToFile(macKey, keyPath);
 		
 		// 取得MAC值
