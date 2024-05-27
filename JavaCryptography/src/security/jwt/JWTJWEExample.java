@@ -90,7 +90,7 @@ public class JWTJWEExample {
 		
 		// 13. 進行驗證
 		if (verifiedJWT.verify(verifier)) {
-			System.out.printf("JWT 簽名驗證成功");
+			System.out.printf("%nJWT 簽名驗證成功");
 			// 顯示 payload 資料
 			JWTClaimsSet claims = verifiedJWT.getJWTClaimsSet();
 			System.out.printf("主題 subject: %s%n", claims.getSubject());
