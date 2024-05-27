@@ -98,6 +98,9 @@ public class JWTJWEExample {
 			System.out.printf("name: %s%n", claims.getStringClaim("name"));
 			System.out.printf("title: %s%n", claims.getStringClaim("title"));
 			System.out.printf("date: %s%n", claims.getStringClaim("date"));
+			System.out.printf("bonus: %s%n", claims.getStringClaim("bonus"));
+			System.out.printf("privilege: %s%n", claims.getStringClaim("privilege"));
+			System.out.printf("salary: %s%n", claims.getIntegerClaim("salary"));
 		} else {
 			System.out.println("JWT 簽名驗證失敗");
 		}
