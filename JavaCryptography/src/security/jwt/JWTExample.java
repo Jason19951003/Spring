@@ -10,17 +10,17 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
 /**
-依據（JWA、JWK）與（JWS）產生 Token（JWT） 
+依據（JWA、JWK）與（JWE、JWS）產生 Token（JWT） 
 
-	+-----+   +-----+
-	| JWK | → | JWS |
-	+-----+   +-----+
-	   ↑         ↓
-	+-----+   +-----+
-	| JWA |   | JWT |
-	+-----+   +-----+
-		
- */
+	+-----+   +-----+   +-----+
+	| JWK | → | JWE |   | JWS |
+	+-----+   +-----+   +-----+
+	   ↑            ↓   ↓
+	+-----+        +-----+
+	| JWA |        | JWT |
+	+-----+        +-----+
+	
+*/
 
 public class JWTExample {
 	public static void main(String[] args) throws Exception {
