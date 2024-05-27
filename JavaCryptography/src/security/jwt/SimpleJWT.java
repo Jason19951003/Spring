@@ -42,7 +42,7 @@ public class SimpleJWT {
 		
 		//----------------------------------------------------------------------------
 		// 5. 驗證JWT的簽名
-		if (KeyUtil.verifyJWTSignature(token, token)) {
+		if (KeyUtil.verifyJWTSignature(token, signingSecure)) {
 			System.out.println("JWT 簽名驗證成功");
 			System.out.println("驗票閘門開啟....");
 		} else {
