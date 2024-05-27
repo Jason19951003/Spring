@@ -39,6 +39,15 @@ public class SimpleJWT {
 		File file = new File("src/security/jwt/ticket_qrcode.png");
 		QRCode.from(token).withSize(300, 300).writeTo(new FileOutputStream(file));
 		System.out.println("QRCode 產生完畢");
+		
+		//----------------------------------------------------------------------------
+		// 5. 驗證JWT的簽名
+		if (KeyUtil.verifyJWTSignature(token, token)) {
+			System.out.println("JWT 簽名驗證成功");
+			System.out.println("驗票閘門開啟....");
+		} else {
+			System.out.println("JWT 簽名驗證失敗");
+		}
 	}
 
 }
