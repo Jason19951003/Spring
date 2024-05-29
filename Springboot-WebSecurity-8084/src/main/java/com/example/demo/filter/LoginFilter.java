@@ -51,6 +51,16 @@ public class LoginFilter implements Filter {
 				res.sendRedirect("/login");
 				return;
 			}
+			// 判斷 csrfToken 令牌是否有效?
+			String csrfToken = req.getParameter("csrfToken");
+			String csrfTokenFromSession = httpSession.getAttribute("csrfToken") + "";
+			
+			if (!csrfTokenFromSession.equals(csrfToken)) {
+				System.out.println("CSRF Token 錯誤");
+				res.sendRedirect("/login");
+				return;
+			}
+			
 			// 是否有此user
 			Map<String, String> user = users.get(username);
 			if (user == null) {
@@ -58,6 +68,7 @@ public class LoginFilter implements Filter {
 				res.sendRedirect("/login");
 				return;
 			}
+			
 			String hash = user.get("hash");
 			byte[] salt = WebKeyUtil.hexStringToByteArray(user.get("salt"));
 			try {
