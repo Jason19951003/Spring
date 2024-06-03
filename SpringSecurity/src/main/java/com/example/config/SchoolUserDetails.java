@@ -9,7 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.example.pojo.UserRequest;
+import com.example.pojo.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SchoolUserDetails implements UserDetails {
 
-	private UserRequest user;
+	private User user;
 	
 	public enum Permission {
 	    ADMIN, TEACHER, STUDENT;
