@@ -1,5 +1,7 @@
 package com.example.controller;
 
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,8 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.config.LoginUser;
-import com.example.pojo.AuthenticateRequest;
+import com.example.config.SchoolUserDetails;
 import com.example.util.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -27,13 +28,13 @@ public class AuthenticationController {
 	private final JwtUtil jwtUtil;
 	
 	@PostMapping("/authenticate")
-	public ResponseEntity<String> authenticate(@RequestBody AuthenticateRequest request) {
-		
-		final LoginUser loginUser;
+	public ResponseEntity<String> authenticate(@RequestBody Map<String, String> map) {
+		String userName = map.get("username");
+		String password = map.get("password");
+		final SchoolUserDetails loginUser;
 		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-					request.getUsername(), request.getPassword()));
-			loginUser = (LoginUser) userDetailsService.loadUserByUsername(request.getUsername());
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userName, password));
+			loginUser = (SchoolUserDetails) userDetailsService.loadUserByUsername(userName);
 			if (loginUser != null) {
 				return ResponseEntity.ok(jwtUtil.generateToken(loginUser));
 			}

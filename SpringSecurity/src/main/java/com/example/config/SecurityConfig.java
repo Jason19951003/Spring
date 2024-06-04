@@ -16,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.example.mapper.UserMapper;
+import com.example.mapper.UserRequestMapper;
 import com.example.pojo.User;
 
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class SecurityConfig {
 	
 	private final JwtAuthFilter jwtAuthFilter;
 	@Autowired
-	private UserMapper userMapper;
+	private UserRequestMapper userMapper;
 	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -36,9 +36,7 @@ public class SecurityConfig {
 		.csrf(csrf-> csrf.disable())
 		.authorizeHttpRequests(
 			(requests) -> requests
-						.requestMatchers("/*.html")
-						.permitAll()
-						.requestMatchers("/*/*.html")
+						.requestMatchers("/index.html","/favicon.ico" ,"/*/*.html" ,"/*/*.css", "/*/*.js", "/*/*.jpg")
 						.permitAll()
 						.requestMatchers("/api/v1/auth/*")
 						.permitAll()
@@ -76,12 +74,11 @@ public class SecurityConfig {
 		return (username -> {
 			// 查詢用戶訊息
 			User user = userMapper.findUserByUserName(username);
-			System.out.println(user);
 			// 如果沒有User 就拋出異常
 			if (user == null) {
 				throw new RuntimeException("帳號或者密碼錯誤");
 			}
-			return new LoginUser(user);
+			return new SchoolUserDetails(user);
 		});
 	}
 }
