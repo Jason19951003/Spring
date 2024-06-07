@@ -48,7 +48,7 @@
 			<a href="/oauth2/github/login">使用 Github 登入 (OAuth2)</a><p />
 			
 			<!-- OIDC 第三方登入 -->
-			<a href="#">使用 Google 登入 (OIDC)</a><p />
+			<a href="/oidc/google/login">使用 Google 登入 (OIDC)</a><p />
 		</form>
 		
 	</body>
