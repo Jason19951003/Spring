@@ -16,6 +16,7 @@ public class ServiceBController {
 	@GetMapping("service-b/{name}")
 	public String getService(@PathVariable String name) {
 		System.out.println("Inside service-b");
+		// 透過 OpenFeign 遠端調用 service-c 的服務
 		return clientService.getService(name);
 	}
 }
