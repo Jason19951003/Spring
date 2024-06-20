@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Employee;
 
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 
 @RestController
 @RequestMapping("/employee")
@@ -53,7 +55,50 @@ public class EmployeeController {
 	}
 	
 	// Retry
+	@Retry(name = "employeeRetry", fallbackMethod = "getEmployeeFallback")
+	@GetMapping("/retry/{empId}")
+	public Employee getEmployee3(@PathVariable Integer empId) {
+		if (empId <= 0) {
+			throw new RuntimeException("員工編號不正確, 無此員工");
+		}
+		
+		if (empId >= 10) {
+			throw new RuntimeException("資料庫或網路繁忙");
+		}
+		
+		Employee emp = new Employee();
+		emp.setEmpId(empId);
+		emp.setEmpName("John");
+		emp.setDescription("Manager");
+		emp.setSalary(15_0000);
+
+		return emp;
+	}
 	
+	@Bulkhead(name = "employeeBulkhead", fallbackMethod = "getEmployeeFallback")
+	@GetMapping("/semaphone/{empId}")
+	public Employee getEmployee4(@PathVariable Integer empId) throws InterruptedException {
+		if (empId <= 0) {
+			throw new RuntimeException("員工編號不正確, 無此員工");
+		}
+		
+		if (empId >= 10) {
+			throw new RuntimeException("資料庫或網路繁忙");
+		}
+		
+		// 模擬業務處理遞延
+		// 給 @Bulkhead 使用
+		// 當執行 http://localhost:6060/employee/semaphone/1 過多時就會印出 "Bulkhead call Rejected"
+		Thread.sleep(3000);
+		
+		Employee emp = new Employee();
+		emp.setEmpId(empId);
+		emp.setEmpName("John");
+		emp.setDescription("Manager");
+		emp.setSalary(15_0000);
+
+		return emp;
+	}
 	
 	// 這是一個回退方法(Fallback), 當getEmployee 方法發生異常將釣用此方法
 	public Employee getEmployeeFallback(Integer empId, Throwable t) {
