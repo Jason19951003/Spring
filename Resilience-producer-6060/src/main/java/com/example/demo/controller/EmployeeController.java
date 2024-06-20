@@ -35,6 +35,10 @@ public class EmployeeController {
 	@CircuitBreaker(name = "employeeCircuitBreaker", fallbackMethod = "getEmployeeFallback")
 	@GetMapping("/breaker/{empId}")
 	public Employee getEmployee2(@PathVariable Integer empId) {
+		if (empId <= 0) {
+			throw new RuntimeException("員工編號不正確, 無此員工");
+		}
+		
 		if (empId >= 10) {
 			throw new RuntimeException("資料庫或網路繁忙");
 		}
