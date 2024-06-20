@@ -32,7 +32,10 @@ public class ResilienceConfig {
 					.build();
 		
 		RetryRegistry registry = RetryRegistry.of(config);
-		
+		// 觀察
+		registry.retry("employeeRetry").getEventPublisher().onRetry(event -> {
+			System.out.println("Retry");
+		});
 		return registry;
 	}
 }
