@@ -10,6 +10,8 @@ import io.github.resilience4j.bulkhead.BulkheadConfig;
 import io.github.resilience4j.bulkhead.BulkheadRegistry;
 import io.github.resilience4j.bulkhead.ThreadPoolBulkheadConfig;
 import io.github.resilience4j.bulkhead.ThreadPoolBulkheadRegistry;
+import io.github.resilience4j.ratelimiter.RateLimiterConfig;
+import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
 import io.github.resilience4j.retry.RetryConfig;
 import io.github.resilience4j.retry.RetryRegistry;
 import io.github.resilience4j.timelimiter.TimeLimiterConfig;
@@ -20,8 +22,8 @@ import io.github.resilience4j.timelimiter.TimeLimiterRegistry;
  */
 @Configuration
 public class ResilienceConfig {
-
-	/**
+	
+    /**
      * 配置重試機制 (Retry)
      * 目的是確保服務在遇到臨時故障時能夠重試，從而提高服務的穩定性。
      * 運作原理是設置最大嘗試次數和重試間隔時間，在指定次數內重試請求。
@@ -91,14 +93,14 @@ public class ResilienceConfig {
 				.coreThreadPoolSize(5)
 				.queueCapacity(10)
 				.build();
-		
 		ThreadPoolBulkheadRegistry registry = ThreadPoolBulkheadRegistry.of(config);
 		registry.bulkhead("employeeThreadPoolBulkhead").getEventPublisher()
-		.onCallRejected(event -> System.out.println("Bulkhead call Rejected"))
-		.onCallPermitted(event -> System.out.println("Bulkhead call Permitted"))
-		.onCallFinished(event -> System.out.println("Bulkhead call Finished"));
+			.onCallRejected(event -> System.out.println("ThreadPool Bulkhead call Rejected"))
+			.onCallPermitted(event -> System.out.println("ThreadPool Bulkhead call Permitted"))
+			.onCallFinished(event -> System.out.println("ThreadPool Bulkhead call Finished"));
 		
 		return registry;
+		
 	}
 	
 	/**
@@ -118,5 +120,29 @@ public class ResilienceConfig {
         
         return TimeLimiterRegistry.of(config);
     }
+    
+    /**
+     * 配置限流機制 (Rate Limiter)
+     * 目的是限制每秒允許的請求數量，防止系統被過多的請求淹沒。
+     * 運作原理是設置每秒允許的最大請求數量和超時時間，超過限制的請求將被拒絕。
+     * 
+     * limitRefreshPeriod: 設置限流的刷新週期為 1 秒。
+     * limitForPeriod: 設置每個週期內允許的最大請求數量為 10。
+     * timeoutDuration: 設置請求超時時間為 500 毫秒。
+     * 
+     * @return RateLimiterRegistry
+     */
+    @Bean
+    public RateLimiterRegistry rateLimiterRegistry() {
+        RateLimiterConfig config = RateLimiterConfig.custom()
+            .limitRefreshPeriod(Duration.ofSeconds(1))
+            .limitForPeriod(10)
+            .timeoutDuration(Duration.ofMillis(500))
+            .build();
+        
+        return RateLimiterRegistry.of(config);
+    }
 	
 }
+
+
