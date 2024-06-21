@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.util.concurrent.CompletableFuture;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +12,7 @@ import com.example.demo.model.Employee;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 
 @RestController
 @RequestMapping("/employee")
@@ -100,17 +103,81 @@ public class EmployeeController {
 		return emp;
 	}
 	
+	// @Bulkhead threadpool 執行緒池
+	@Bulkhead(name = "employeeThreadPoolBulkhead", type=Bulkhead.Type.THREADPOOL , fallbackMethod = "getCompletableFutureEmployeeFallback")
+	@GetMapping("/threadpool/{empId}")
+	public CompletableFuture<Employee> getEmployee5(@PathVariable Integer empId) throws InterruptedException {
+		return CompletableFuture.supplyAsync(() -> {
+			if (empId <= 0) {
+				throw new RuntimeException("員工編號不正確, 無此員工");
+			}
+			
+			if (empId >= 10) {
+				throw new RuntimeException("資料庫或網路繁忙");
+			}
+			
+			// 模擬業務處理遞延
+			// 給 @Bulkhead 使用
+			// 當執行 http://localhost:6060/employee/threadpool/1 過多時就會印出 "Bulkhead call Rejected"
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+				throw new RuntimeException("業務處理遞延失敗");
+			}
+			
+			Employee emp = new Employee();
+			emp.setEmpId(empId);
+			emp.setEmpName("John");
+			emp.setDescription("Manager");
+			emp.setSalary(15_0000);
+
+			return emp;
+		});
+	}
+
+	// 利用 TimeLimiter 來處理錯誤
+	@GetMapping("/timelimiter/{empId}")
+	@TimeLimiter(name = "employeeTimeLimiter", fallbackMethod = "getCompletableFutureEmployeeFallback")
+	public CompletableFuture<Employee> getEmployee6(@PathVariable Integer empId) throws InterruptedException {
+		return CompletableFuture.supplyAsync(() -> {
+			if (empId <= 0) {
+				throw new RuntimeException("員工編號不正確, 無此員工");
+			}
+			
+			if (empId >= 10) {
+				throw new RuntimeException("資料庫或網路繁忙");
+			}
+			
+			// 模擬業務處理遞延(超過 2s 就會發生TimeLimiter's TimeoutException)
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+				throw new RuntimeException("業務處理遞延失敗");
+			}
+			
+			Employee emp = new Employee();
+			emp.setEmpId(empId);
+			emp.setEmpName("John");
+			emp.setDescription("Manager");
+			emp.setSalary(15_0000);
+
+			return emp;
+		});
+	}
+	
 	// 這是一個回退方法(Fallback), 當getEmployee 方法發生異常將釣用此方法
-	public Employee getEmployeeFallback(Integer empId, Throwable t) {
-		if (empId <= 0) {
-			throw new RuntimeException("員工編號不正確, 無此員工");
-		}
-		Employee emp = new Employee();
-		emp.setEmpId(empId);
-		emp.setEmpName("Fallback");
-		emp.setDescription(t.getMessage());
-		emp.setSalary(15_0000);
-		return emp;
+	public CompletableFuture<Employee> getCompletableFutureEmployeeFallback(Integer empId, Throwable t) {
+		return CompletableFuture.supplyAsync(()->{
+			if (empId <= 0) {
+				throw new RuntimeException("員工編號不正確, 無此員工");
+			}
+			Employee emp = new Employee();
+			emp.setEmpId(empId);
+			emp.setEmpName("Fallback");
+			emp.setDescription(t.getMessage());
+			emp.setSalary(15_0000);
+			return emp;
+		});
 	}
 
 }

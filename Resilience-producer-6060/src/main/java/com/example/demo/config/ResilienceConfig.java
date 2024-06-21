@@ -8,8 +8,12 @@ import org.springframework.context.annotation.Configuration;
 
 import io.github.resilience4j.bulkhead.BulkheadConfig;
 import io.github.resilience4j.bulkhead.BulkheadRegistry;
+import io.github.resilience4j.bulkhead.ThreadPoolBulkheadConfig;
+import io.github.resilience4j.bulkhead.ThreadPoolBulkheadRegistry;
 import io.github.resilience4j.retry.RetryConfig;
 import io.github.resilience4j.retry.RetryRegistry;
+import io.github.resilience4j.timelimiter.TimeLimiterConfig;
+import io.github.resilience4j.timelimiter.TimeLimiterRegistry;
 
 /**
  * Resilience4j 配置類，用於配置各種容錯機制如重試、限流、隔離和時間限制等。
@@ -62,9 +66,9 @@ public class ResilienceConfig {
 		BulkheadRegistry registry = BulkheadRegistry.of(config);
 		
 		registry.bulkhead("employeeBulkhead").getEventPublisher()
-			.onCallRejected(event -> System.out.println(" Bulkhead call Rejected"))
-			.onCallPermitted(event -> System.out.println(" Bulkhead call Permitted"))
-			.onCallFinished(event -> System.out.println(" Bulkhead call Finished"));
+			.onCallRejected(event -> System.out.println("Bulkhead call Rejected"))
+			.onCallPermitted(event -> System.out.println("Bulkhead call Permitted"))
+			.onCallFinished(event -> System.out.println("Bulkhead call Finished"));
 		
 		return registry;
 	}
@@ -80,4 +84,39 @@ public class ResilienceConfig {
      * 
      * @return ThreadPoolBulkheadRegistry
      */
+	@Bean
+	public ThreadPoolBulkheadRegistry threadPoolBulkheadRegistry() {
+		ThreadPoolBulkheadConfig config = ThreadPoolBulkheadConfig.custom()
+				.maxThreadPoolSize(5)
+				.coreThreadPoolSize(5)
+				.queueCapacity(10)
+				.build();
+		
+		ThreadPoolBulkheadRegistry registry = ThreadPoolBulkheadRegistry.of(config);
+		registry.bulkhead("employeeThreadPoolBulkhead").getEventPublisher()
+		.onCallRejected(event -> System.out.println("Bulkhead call Rejected"))
+		.onCallPermitted(event -> System.out.println("Bulkhead call Permitted"))
+		.onCallFinished(event -> System.out.println("Bulkhead call Finished"));
+		
+		return registry;
+	}
+	
+	/**
+     * 配置時間限制機制 (Time Limiter)
+     * 目的是限制方法執行的最大時間，防止長時間未響應的請求拖垮系統。
+     * 運作原理是設置方法執行的最大時間，超過這個時間將拋出 TimeoutException。
+     * 
+     * timeoutDuration: 設置方法執行的最大時間為 2 秒。
+     * 
+     * @return TimeLimiterRegistry
+     */
+    @Bean
+    public TimeLimiterRegistry timeLimiterRegistry() {
+        TimeLimiterConfig config = TimeLimiterConfig.custom()
+            .timeoutDuration(Duration.ofSeconds(2))
+            .build();
+        
+        return TimeLimiterRegistry.of(config);
+    }
+	
 }
