@@ -60,6 +60,20 @@ public class BookingService {
 	}
 	
 	public static void main(String[] args) throws InterruptedException {
-		new BookingService().bookTrip();
+		System.out.println("開始預定");
+		
+		new Thread(() -> {
+			BookingService bookingService = new BookingService();
+			Thread bookingThread = new Thread(() -> bookingService.bookTrip());
+			
+			bookingThread.start();
+			try {
+				bookingThread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}).start();// 等待bookingThread 執行完畢
+		
+		System.out.println("做其他事情...");
 	}
 }
