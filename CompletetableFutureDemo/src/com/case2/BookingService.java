@@ -17,6 +17,7 @@ public class BookingService {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			System.out.println("酒店預訂完成");
 			return "Hotel booked";
 		});
 	}
@@ -29,6 +30,7 @@ public class BookingService {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			System.out.println("航班預定完成");
 			return "Flight booked";
 		});
 	}
@@ -61,5 +63,3 @@ public class BookingService {
 		new BookingService().bookTrip();
 	}
 }
-
-
