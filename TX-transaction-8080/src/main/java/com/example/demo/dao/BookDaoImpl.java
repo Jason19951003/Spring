@@ -52,5 +52,4 @@ public class BookDaoImpl implements BookDao {
 		return jdbcTemplate.update(sql, bookPrice, username); 
 	}
 
-	
 }
