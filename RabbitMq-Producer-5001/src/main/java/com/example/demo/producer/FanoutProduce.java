@@ -22,7 +22,6 @@ public class FanoutProduce {
 		String data = "Hello Fanout Exchange: " + new Date();
 		//rabbitTemplate.convertAndSend("fanout-exchange", "", data);
 		
-
 		// 持久化訊息
 		MessageProperties messageProperties = new MessageProperties();
 		messageProperties.setDeliveryMode(MessageDeliveryMode.PERSISTENT);
