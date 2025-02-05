@@ -1,15 +1,15 @@
 let socket = new SockJS('/gs-guide-websocket');
 let stompClient = Stomp.over(socket);
 
-stompClient.connect({}, (frame) => {
-    setConnected(true);
-    console.log('Connected: ' + frame);
-    stompClient.subscribe('/topic/greetings', (greeting) => {
-        showGreeting(JSON.parse(greeting.body).content);
-    });
-}, (error) => {
-    console.error('Error with websocket', error);
-});
+// stompClient.connect({}, (frame) => {
+//     setConnected(true);
+//     console.log('Connected: ' + frame);
+//     stompClient.subscribe('/topic/greetings', (greeting) => {
+//         showGreeting(JSON.parse(greeting.body).content);
+//     });
+// }, (error) => {
+//     console.error('Error with websocket', error);
+// });
 
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);

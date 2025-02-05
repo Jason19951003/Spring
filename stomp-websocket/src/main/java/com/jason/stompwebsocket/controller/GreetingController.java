@@ -2,18 +2,32 @@ package com.jason.stompwebsocket.controller;
 
 import com.jason.stompwebsocket.model.Greeting;
 import com.jason.stompwebsocket.model.HelloMessage;
+import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.util.HtmlUtils;
 
+import java.util.Map;
+
 @Controller
 public class GreetingController {
 
-    @MessageMapping("/hello")
+    // MessageMapping 用於接收前端的訊息
+    // SendTo 用於發送訊息給前端
+    @MessageMapping("/app/hello")
     @SendTo("/topic/greetings")
-    public Greeting greeting(HelloMessage message) throws Exception {
-//        Thread.sleep(1000); // simulated delay
-        return new Greeting("Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
+    public Greeting greeting(HelloMessage message, @Headers Map<String, Object> headers) throws Exception {
+        System.out.println("接收到訊息" + message);
+
+        String simpDestination = (String) headers.get("simpDestination");
+
+        if (simpDestination.startsWith("/app")) {
+            return new Greeting("[APP] Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
+        } else if (simpDestination.startsWith("/ws")) {
+            return new Greeting("[WS] Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
+        } else {
+            throw new IllegalArgumentException("Invalid destination: " + simpDestination);
+        }
     }
 }
