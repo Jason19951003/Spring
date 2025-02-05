@@ -12,7 +12,7 @@ public class MessageScheduled {
 
     private final SimpMessagingTemplate messagingTemplate;
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 10)
     public void sendMessage() {
         messagingTemplate.convertAndSend("/topic/greetings", new Greeting("Hello I'm Jason"));
     }

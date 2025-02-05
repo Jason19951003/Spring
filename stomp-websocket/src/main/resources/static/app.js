@@ -1,6 +1,6 @@
-let socket = new SockJS('/gs-guide-websocket');
-let stompClient = Stomp.over(socket);
-
+let socket = null;
+let stompClient = null;
+let num = 1;
 // stompClient.connect({}, (frame) => {
 //     setConnected(true);
 //     console.log('Connected: ' + frame);
@@ -30,6 +30,8 @@ function connect() {
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/greetings', (greeting) => {
             showGreeting(JSON.parse(greeting.body).content);
+            num = num * 2;
+            console.log(num);
         });
     }, (error) => {
         console.error('Error with websocket', error);
