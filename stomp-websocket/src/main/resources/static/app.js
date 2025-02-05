@@ -23,6 +23,8 @@ function setConnected(connected) {
 }
 
 function connect() {
+    socket = new SockJS('/gs-guide-websocket');
+    stompClient = Stomp.over(socket);
     stompClient.connect({}, (frame) => {
         setConnected(true);
         console.log('Connected: ' + frame);
@@ -40,6 +42,7 @@ function disconnect() {
             setConnected(false);
             console.log("Disconnected");
         });
+        stompClient = null; // 清除 stompClient，避免使用已關閉的物件
     }
 }
 
