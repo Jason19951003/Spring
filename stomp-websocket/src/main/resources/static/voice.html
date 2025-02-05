@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Voice Merge</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link href="/main.css" rel="stylesheet">
+  <meta charset="UTF-8">
+</head>
+<body>
+<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
+  enabled. Please enable
+  Javascript and reload this page!</h2></noscript>
+<div id="main-content" class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <!-- 我要播放mp3音檔 ./voice/A.mp3 -->
+      <!-- 播放 mp3 音檔 -->
+      <h1>連續播放</h1>
+      <audio id="audioPlayer" controls>
+        <source src="./voice/A.mp3" type="audio/mpeg">
+        您的瀏覽器不支援音頻播放。
+      </audio>
+      <p>當前播放檔案：<span id="currentFile">A.mp3</span></p>
+    </div>
+    <div class="col-md-12">
+      <h1>合成音檔</h1>
+      <audio controls>
+        <source src="./voice/A12D.mp3" type="audio/mpeg">
+        您的瀏覽器不支援音頻播放。
+      </audio>
+    </div>
+  </div>
+</div>
+<script>
+  // 取得音檔播放器和顯示的元素
+  const audioPlayer = document.getElementById('audioPlayer');
+  const currentTimeDisplay = document.getElementById('currentTime');
+  const currentFileDisplay = document.getElementById('currentFile');
+
+  // 音檔播放清單
+  const playlist = ['./voice/A.mp3', './voice/1.mp3', './voice/2.mp3', './voice/D.mp3'];
+  let currentIndex = 0; // 當前播放清單索引
+
+  // 更新播放時間
+  audioPlayer.addEventListener('timeupdate', () => {
+    currentTimeDisplay.textContent = audioPlayer.currentTime.toFixed(2);
+  });
+
+  // 當音檔播放時，觸發的事件
+  audioPlayer.addEventListener('play', () => {
+    currentFileDisplay.textContent = playlist[currentIndex].split('/').pop(); // 更新檔案名
+  });
+
+  // 當音檔結束時，播放下一首
+  audioPlayer.addEventListener('ended', () => {
+    currentIndex++; // 切換到下一首
+    if (currentIndex < playlist.length) {
+      audioPlayer.src = playlist[currentIndex]; // 設定下一個音檔
+      audioPlayer.play(); // 自動播放下一首
+    } else {
+      currentIndex = 0; // 播放完清單後，回到第一首（可選）
+      audioPlayer.src = playlist[currentIndex];
+      console.log("所有音檔播放完成");
+    }
+  });
+
+  // 預設顯示第一首音檔
+  currentFileDisplay.textContent = playlist[currentIndex].split('/').pop();
+</script>
+</body>
+</html>
