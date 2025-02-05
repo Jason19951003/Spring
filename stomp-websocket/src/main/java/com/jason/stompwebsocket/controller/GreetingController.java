@@ -15,7 +15,7 @@ public class GreetingController {
 
     // MessageMapping 用於接收前端的訊息
     // SendTo 用於發送訊息給前端
-    @MessageMapping("/app/hello")
+    @MessageMapping("/hello")
     @SendTo("/topic/greetings")
     public Greeting greeting(HelloMessage message, @Headers Map<String, Object> headers) throws Exception {
         System.out.println("接收到訊息" + message);
