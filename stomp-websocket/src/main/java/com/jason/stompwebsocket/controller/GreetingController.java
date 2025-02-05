@@ -20,14 +20,8 @@ public class GreetingController {
     public Greeting greeting(HelloMessage message, @Headers Map<String, Object> headers) throws Exception {
         System.out.println("接收到訊息" + message);
 
-        String simpDestination = (String) headers.get("simpDestination");
+//        String simpDestination = (String) headers.get("simpDestination");
 
-        if (simpDestination.startsWith("/app")) {
-            return new Greeting("[APP] Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
-        } else if (simpDestination.startsWith("/ws")) {
-            return new Greeting("[WS] Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
-        } else {
-            throw new IllegalArgumentException("Invalid destination: " + simpDestination);
-        }
+        return new Greeting("[APP] Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
     }
 }
