@@ -2,6 +2,7 @@ package com.jason.stompwebsocket.controller;
 
 import com.jason.stompwebsocket.model.Greeting;
 import com.jason.stompwebsocket.model.HelloMessage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -10,6 +11,7 @@ import org.springframework.web.util.HtmlUtils;
 
 import java.util.Map;
 
+@Slf4j
 @Controller
 public class GreetingController {
 
@@ -18,7 +20,7 @@ public class GreetingController {
     @MessageMapping("/hello")
     @SendTo("/topic/greetings")
     public Greeting greeting(HelloMessage message, @Headers Map<String, Object> headers) throws Exception {
-        System.out.println("接收到訊息" + message);
+        log.info("接收到訊息: {}", message);
 
 //        String simpDestination = (String) headers.get("simpDestination");
 
